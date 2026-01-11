@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import tacocloud.model.TacoOrder;
+import tacocloud.repository.OrderRepository;
 
 @Slf4j
 @Controller
@@ -18,13 +19,23 @@ import tacocloud.model.TacoOrder;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
+    private final OrderRepository orderRepo;
+
+    public OrderController(OrderRepository orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
     @GetMapping("/current")
     public String orderForm() {
         return "orderForm";
     }
 
     @PostMapping
-    public String processOrder(TacoOrder order, SessionStatus sessionStatus) {
+    public String processOrder(TacoOrder order, Errors errors, SessionStatus sessionStatus) {
+        if (errors.hasErrors()) {
+            return "orderForm";
+        }
+        orderRepo.save(order);
         log.info("Order submitted: {}", order);
         sessionStatus.setComplete();
         return "redirect:/";
