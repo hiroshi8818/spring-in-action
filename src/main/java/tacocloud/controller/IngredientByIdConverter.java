@@ -1,20 +1,16 @@
 package tacocloud.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tacocloud.model.Ingredient;
 import tacocloud.repository.IngredientRepository;
 import org.springframework.core.convert.converter.Converter;
 
 @Component
+@RequiredArgsConstructor
 public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
-    private IngredientRepository ingredientRepo;
-
-    @Autowired
-    public IngredientByIdConverter(IngredientRepository ingredientRepo) {
-        this.ingredientRepo = ingredientRepo;
-    }
+    private final IngredientRepository ingredientRepo;
 
     @Override
     public Ingredient convert(String id) {

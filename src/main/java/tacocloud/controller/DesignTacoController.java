@@ -1,8 +1,8 @@
 package tacocloud.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,9 +13,6 @@ import tacocloud.model.Taco;
 import tacocloud.model.TacoOrder;
 import tacocloud.repository.IngredientRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,14 +20,10 @@ import java.util.stream.StreamSupport;
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
+@RequiredArgsConstructor
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
-
-    @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo) {
-        this.ingredientRepo = ingredientRepo;
-    }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
