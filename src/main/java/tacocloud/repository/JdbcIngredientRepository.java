@@ -7,32 +7,34 @@ import tacocloud.model.Ingredient;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcIngredientRepository implements IngredientRepository {
-    private JdbcTemplate jdbc;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcIngredientRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public JdbcIngredientRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Iterable<Ingredient> findAll() {
-        return jdbc.query("select id, name, type from Ingredient",
+        return jdbcTemplate.query("select id, name, type from Ingredient",
                 this::mapRowToIngredient);
     }
 
     @Override
-    public Ingredient findOne(String id) {
-        return jdbc.queryForObject(
-                "select id, name, type from Ingredient where id=?",
+    public Optional<Ingredient> findById(String id) {
+        List<Ingredient> results = jdbcTemplate.query("select id, name, type from Ingredient where id=?",
                 this::mapRowToIngredient, id);
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
     }
 
     @Override
     public Ingredient save(Ingredient ingredient) {
-        jdbc.update("insert into Ingredient (id, name, type) values (?, ?, ?)",
+        jdbcTemplate.update("insert into Ingredient (id, name, type) values (?, ?, ?)",
                 ingredient.getId(),
                 ingredient.getName(),
                 ingredient.getType().toString());

@@ -3,8 +3,10 @@ package tacocloud.repository;
 
 import tacocloud.model.Ingredient;
 
+import java.util.Optional;
+
 public interface IngredientRepository {
     Iterable<Ingredient> findAll();
-    Ingredient findOne(String id);
+    Optional<Ingredient> findById(String id);
     Ingredient save(Ingredient ingredient);
 }
